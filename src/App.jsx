@@ -66,8 +66,8 @@ function App() {
               <h2>
                 <img src={LogoSmall} alt="" />
               </h2>
-              <div className="bg-gray-700 w-80 h-80 py-8 rounded-[100%]"> 
-                <div ref={qrRef} className="mx-auto flex justify-center items-center bg-white rounded-4xl overflow-hidden w-64 h-64">
+              <div ref={qrRef} className="bg-gray-700 w-80 h-80 py-8 rounded-[100%]"> 
+                <div  className="mx-auto flex justify-center items-center bg-white rounded-4xl overflow-hidden w-64 h-64">
                   <QRCode value={qrCode} size={220}/>
                 </div>
               </div>
