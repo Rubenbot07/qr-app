@@ -102,7 +102,7 @@ function App() {
                 </div>
                 { logo &&
                   <div className="absolute w-16 h-16 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                    <img src={logo} alt="" />
+                    <img className="w-full h-full object-cover" src={logo} alt="" />
                   </div>
                 }
               </div>
