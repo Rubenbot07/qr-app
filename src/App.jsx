@@ -86,7 +86,7 @@ function App() {
               </form>
             </section>
           ) : (
-            <section aria-label="QR code generated" className="flex flex-col justify-start h-screen pt-16 gap-20 items-center">
+            <section aria-label="QR code generated" className="flex flex-col justify-start h-screen pt-16 gap-14 items-center">
               <h2>
                 <img src={LogoSmall} alt="" />
               </h2>
