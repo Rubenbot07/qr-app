@@ -1,16 +1,18 @@
 import { useState, useRef } from "react"
 import { Input } from "./components/Input";
-import QRCode from "react-qr-code";
 import { toPng } from "html-to-image";
+import { Toast } from "./components/Toast";
+import { QRCodeCanvas } from "qrcode.react";
 import Logo from "./assets/Logo.svg"
 import LogoSmall from "./assets/Logo-small.svg"
 import download from "./assets/Load_circle_duotone.svg"
 import clipboard from "./assets/link_alt.svg"
-import { Toast } from "./components/Toast";
 function App() {
   const [value, setValue] = useState('');
   const [qrCode, setQrCode] = useState('');
   const [toast, setToast] = useState(false);
+  const [logo, setLogo] = useState(null);
+  const [toastMessage, setToastMessage] = useState('');
   const generateQRCode = (event) => {
     event.preventDefault();
     setQrCode(value)
@@ -31,8 +33,30 @@ function App() {
       });
   };
 
+  const handleLogoUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setLogo(reader.result);
+      };
+      reader.readAsDataURL(file);
+      setToastMessage('Logo uploaded successfully')
+      setToast(true)
+      setTimeout(() => {
+        setToast(false)
+      }, 2000);
+    }
+  };
+
+  const backHome = () => {
+    setQrCode('')
+    setValue('')
+    setLogo(null)
+  }
   const copyToClipboard = () => {
     navigator.clipboard.writeText(qrCode)
+    setToastMessage('URL Copied to clipboard')
     setToast(true)
     setTimeout(() => {
       setToast(false)
@@ -66,10 +90,21 @@ function App() {
               <h2>
                 <img src={LogoSmall} alt="" />
               </h2>
-              <div ref={qrRef} className="bg-gray-700 w-80 h-80 py-8 rounded-[100%]"> 
+              <div ref={qrRef} className="relative bg-gray-700 w-80 h-80 py-8 rounded-[100%]"> 
                 <div  className="mx-auto flex justify-center items-center bg-white rounded-4xl overflow-hidden w-64 h-64">
-                  <QRCode value={qrCode} size={220}/>
+                  <QRCodeCanvas
+                    value={value}
+                    size={220}
+                    bgColor="#ffffff"
+                    fgColor="#000000"
+                    level="H" // High error correction level to allow for logo overlay
+                  />
                 </div>
+                { logo &&
+                  <div className="absolute w-16 h-16 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <img src={logo} alt="" />
+                  </div>
+                }
               </div>
               <div className="w-screen max-w-xs md:max-w-md flex justify-between">
                 <button
@@ -89,8 +124,18 @@ function App() {
                     <img src={clipboard} alt="" />
                   </button>
               </div>
-              <button onClick={() => setQrCode('')} className="bg-blue-800 px-2 py-4 rounded-xl text-white w-16 absolute top-2 left-4" aria-label="Generate another QR code">Back</button>
-              <Toast toast={toast}/>
+              <section className="flex flex-col items-center justify-center gap-4">
+                <p className="text-white">Set your logo here!</p>
+                <input 
+                  type="file"
+                  accept="image/*"
+                  onChange={handleLogoUpload} 
+                  className="bg-blue-800 px-2 py-4 rounded-xl text-white w-36 md:w-48"
+                  aria-label="Upload your logo"
+                />
+              </section>
+              <button onClick={backHome} className="bg-blue-800 px-2 py-4 rounded-xl text-white w-16 absolute top-2 left-4" aria-label="Generate another QR code">Back</button>
+              <Toast toast={toast} toastMessage={toastMessage}/>
             </section>
           )
         }

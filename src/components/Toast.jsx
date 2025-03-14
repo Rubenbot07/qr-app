@@ -1,6 +1,6 @@
 import {  useEffect, useState } from 'react'
 
-export function Toast({ toast }) {
+export function Toast({ toast, toastMessage }) {
   const [progress, setProgress] = useState(100);
   useEffect(() => {
     if (toast) {
@@ -25,7 +25,7 @@ export function Toast({ toast }) {
         <>
             {toast && (
                 <div className="bg-blue-800 p-2 rounded-xl flex flex-col w-auto absolute bottom-4 right-4 items-center justify-center" > 
-                    <p className="text-white" role="alert" aria-live='assertive'>URL Copied to clipboard</p>
+                    <p className="text-white" role="alert" aria-live='assertive'>{toastMessage}</p>
                     <div className="bg-white h-2" style={{ width: `${progress}%` }}></div>
                 </div>
             )}
